@@ -133,21 +133,24 @@ class CheckResult(LoginRequiredMixin, View):
         semester = request.POST.get("semester")
         course_code = request.POST.get("course") 
         x_session =  Session.objects.get(session=session)
-        #try
-        x_semester = Semester.objects.get(semester=semester, session=x_session)
-        if course_code != "all":
-            x_course = Course.objects.get(code=course_code)
-            try:
-                result = StudentGrade.objects.get(session=x_session, semester=x_semester, student=student, course=x_course)
-            except:
-                result = "no_result"
+        try:
+            x_semester = Semester.objects.get(semester=semester, session=x_session)
+        except:
+            x_semester = None
+        if x_semester != None:
+            if course_code != "all":
+                x_course = Course.objects.get(code=course_code)
+                try:
+                    result = StudentGrade.objects.get(session=x_session, semester=x_semester, student=student, course=x_course)
+                except:
+                    result = "no_result"
+            else:
+                try:
+                    result = StudentGrade.objects.filter(session=x_session, semester=x_semester, student=student)
+                except:
+                    result = "no_result"
         else:
-            try:
-                result = StudentGrade.objects.filter(session=x_session, semester=x_semester, student=student)
-            except:
-                result = "no_result"
-      
-        print(result)
+            result = "no_result"
         context = {
             "result":result,
             "session":session,
@@ -175,7 +178,7 @@ class Grading(LoginRequiredMixin, View):
         session = request.POST.get("session")
         semester = request.POST.get("semester")
         course_code = request.POST.get("course")
-        
+
         x_session =  Session.objects.get(session=session)
         #try
         x_semester = Semester.objects.get(semester=semester, session=x_session)
