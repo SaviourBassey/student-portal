@@ -12,14 +12,20 @@ class LoginView(View):
     def post(self, request, *args, **kwargs):
         reg_number = str(request.POST.get('reg_number')).upper()
         password = request.POST.get('password')
-        student = Student.objects.get(reg_number=reg_number)
-        student_username = student.user.username
-        user = authenticate(request, username=student_username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("portal:student_dashboard")
+        try:
+            student = Student.objects.get(reg_number=reg_number)
+        except:
+            student = None
+        if student is not None:
+            student_username = student.user.username
+            user = authenticate(request, username=student_username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("portal:student_dashboard")
+            else:
+                return redirect("accounts:login")
         else:
-            return redirect("accounts:login")
+                return redirect("accounts:login")
 
 
 class LogoutView(View):
