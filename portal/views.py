@@ -147,6 +147,8 @@ class CheckResult(LoginRequiredMixin, View):
             else:
                 try:
                     result = StudentGrade.objects.filter(session=x_session, semester=x_semester, student=student)
+                    if len(result) == 0:
+                        result = "no_result"
                 except:
                     result = "no_result"
         else:
