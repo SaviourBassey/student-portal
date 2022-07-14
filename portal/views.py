@@ -175,9 +175,7 @@ class Grading(LoginRequiredMixin, View):
         session = request.POST.get("session")
         semester = request.POST.get("semester")
         course_code = request.POST.get("course")
-        print(session)
-        print(semester)
-        print(course_code)
+        
         x_session =  Session.objects.get(session=session)
         #try
         x_semester = Semester.objects.get(semester=semester, session=x_session)
