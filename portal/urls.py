@@ -9,6 +9,6 @@ urlpatterns =[
     path("check-result/", views.CheckResult.as_view(), name="check_result"),
     path("student-grading/", views.Grading.as_view(), name="grading"),
     path("add-grade/", views.AddGrade.as_view(), name="add_grade"),
-    path("student-dashboard/", views.StudentDashboard.as_view(), name="student_dashboard"),
+    path("", views.StudentDashboard.as_view(), name="student_dashboard"),
     path("lecturer-dashboard/", views.LecturerDashboard.as_view(), name="lecturer_dashboard"),
 ]
