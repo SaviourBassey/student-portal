@@ -21,8 +21,12 @@ class RegisterCourse(LoginRequiredMixin, View):
         student = Student.objects.get(user=logged_in_user)
         semester = Semester.objects.all().order_by("-timestamp").first()
         session = Session.objects.all().order_by("-timestamp").first()
-        old_session = Session.objects.all().order_by("-timestamp")[1]
-        old_semester = Semester.objects.get(session=old_session, semester=user_semester)
+        try:
+            old_session = Session.objects.all().order_by("-timestamp")[1]
+            old_semester = Semester.objects.get(session=old_session, semester=user_semester)
+        except:
+            old_session = None
+            old_semester = None
         student_department = student.department
         student_level = student.level
         current_semester = semester.semester
@@ -34,8 +38,9 @@ class RegisterCourse(LoginRequiredMixin, View):
         if (user_session == current_session) and (user_semester == current_semester):
             semester_course = Course.objects.filter(department=student_department, semeter=user_semester, level=student_level)
             registered_course = RegisteredCourse.objects.filter(session=session, semester=semester)
-            registered_course_previous_session = RegisteredCourse.objects.filter(session=old_session, semester=old_semester, student=student)
-            student_grade_previous_session = StudentGrade.objects.filter(session=old_session, semester=old_semester, student=student)
+            if (old_session is not None) and (old_semester is not None):
+                registered_course_previous_session = RegisteredCourse.objects.filter(session=old_session, semester=old_semester, student=student)
+                student_grade_previous_session = StudentGrade.objects.filter(session=old_session, semester=old_semester, student=student)
             
             for course in semester_course:
                 for reg_course in registered_course:
@@ -46,19 +51,16 @@ class RegisterCourse(LoginRequiredMixin, View):
                 if course not in already_registered:
                     not_registered.append(course)
 
-            for old_course in registered_course_previous_session:
-                for old_grade in student_grade_previous_session:
-                    
-                    if (old_course.course.code == old_grade.course.code) and (old_grade.grade == "F"):
-                        print(old_grade.course.code, old_course.course.code)
-                        old_courses.append(old_course.course)
+            if (old_session is not None) and (old_semester is not None):
+                for old_course in registered_course_previous_session:
+                    for old_grade in student_grade_previous_session:
+                        
+                        if (old_course.course.code == old_grade.course.code) and (old_grade.grade == "F"):
+                            print(old_grade.course.code, old_course.course.code)
+                            old_courses.append(old_course.course)
                         
         else:
             courses = "closed"
-
-        print(already_registered)
-        print(not_registered)
-        print(old_courses)
         context = {
             "already_registered":already_registered,
             "not_registered":not_registered,
