@@ -1,0 +1,63 @@
+{% extends "home/index.html" %}
+{% load static %}
+
+{% block body %}
+
+    <!-- Start Hero Area -->
+    <section class="hero-section height-470" style="background-image:url({% static 'assets/images/about_us.png' %})" data-aos="fade-up">
+        <div class="hero-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="page-hrader text-white text-center">
+                            <h1 class="display-3">SignIn Form</h1>
+                            <div class="page-breadcrumb">
+                                <p><a class="text-white" href="index.html">Home</a> - SignIn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero Area -->
+    <!--Start Page -->
+    <div class="page-wrapper section-ptb-3" data-aos="fade-up">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="apply-wrapper">
+                        <h2>Sign In to your account</h2>
+                        <form method="post" class="contact-form apply_form bg_dark_9 p-5">
+                            {% csrf_token %}   
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="std_address">Matric Number</label>
+                                        <input type="text" name="reg_number" class="form-control" placeholder="Matric Number" maxlength="16">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="std_address">Access Code</label>
+                                        <input type="password" name="password" class="form-control" placeholder="Access Code" maxlength="16">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mx-auto text-center">
+                                    <button type="submit" class="button_one mt-3">Login</button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="form-message"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Page -->
+
+{% endblock body %}

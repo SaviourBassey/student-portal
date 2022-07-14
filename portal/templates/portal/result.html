@@ -1,0 +1,186 @@
+{% extends "home/index.html" %}
+{% load static %}
+
+    {% block body %}
+    <!-- Start Hero Area -->
+    <section class="hero-section height-470" style="background-image:url({% static 'assets/images/about_us.png' %})">
+        <div class="hero-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="page-hrader text-white text-center">
+                            <h1 class="display-3">Result</h1>
+                            <div class="page-breadcrumb">
+                                <p><a class="text-white" href="#">Home</a> - Result</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero Area -->
+    <!--Start Page -->
+    <div class="page-wrapper section-ptb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto text-center">
+                    <div class="section-title">
+                        <h2>Search Your Result</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus est eum quia eos illum mollitia, delectus eveniet laboriosam molestias omnis neque.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 mx-auto section-pb border-bottom">
+                    <form method="post" class="search-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <select name="session" id="department" class="form-control" placeholder="Session" required>
+                                    <option value="">--select Session--</option>
+                                    {% if session %}
+                                    {% for sessions in session %}
+                                    <option value="{{ sessions.session }}">{{ sessions.session }}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <select name="semester" id="exam_year" class="form-control" placeholder="semester" required>
+                                    <option value="">--Select Semeter--</option>
+                                    <option value="1st">1st</option>
+                                    <option value="2nd">2nd</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <select name="course" id="exam_year" class="form-control" placeholder="course" required>
+                                    <option value="all">--All courses--</option>
+                                    {% if course %}
+                                    {% for course in course %}
+                                    <option value="{{ course.code }}">{{ course.name}} ({{ course.code }})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            {% if result %}
+                            <div class="col-lg-12 text-center mx-auto">
+                                <button type="submit" class="button_one" disabled>View Result</button>
+                            </div>
+                            {% else %}
+                            <div class="col-lg-12 text-center mx-auto">
+                                <button type="submit" class="button_one">View Result</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% if result %}
+            {% if result == "no_result" %}
+            <div class="result-wrapper section-pt">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-10 mx-auto text-center">
+                            <div class="results-area">
+                                <h2>No result availble for {{ semester }} Semeter of {{ session }} Session</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                {% if course_code == "all" %}
+                    <div class="result-wrapper section-pt">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-10 mx-auto text-center">
+                                    <div class="results-area">
+                                        <h2>Here Your Result</h2>
+                                        <div class="result-table table-responsive mt-5 table-bordered">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S/N</th>
+                                                        <th>Cource Title</th>
+                                                        <th>Cource Code</th>
+                                                        <th>Credit Load</th>
+                                                        <th>CA</th>
+                                                        <th>Exams</th>
+                                                        <th>Total</th>
+                                                        <th>Grade</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for result in result %}
+                                                    <tr>
+                                                        <td>{{ forloop.counter }}</td>
+                                                        <td>{{ result.course.name }}</td>
+                                                        <td>{{ result.course.code }}</td>
+                                                        <td>{{ result.course.credit_load }}</td>
+                                                        <td>{{ result.ca }}</td>
+                                                        <td>{{ result.exams }}</td>
+                                                        <td>{{ result.total }}</td>
+                                                        <td>{{ result.grade }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="result-wrapper section-pt">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-10 mx-auto text-center">
+                                    <div class="results-area">
+                                        <h2>Here Your Result</h2>
+                                        <div class="result-table table-responsive mt-5 table-bordered">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S/N</th>
+                                                        <th>Cource Title</th>
+                                                        <th>Cource Code</th>
+                                                        <th>Credit Load</th>
+                                                        <th>CA</th>
+                                                        <th>Exams</th>
+                                                        <th>Total</th>
+                                                        <th>Grade</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>{{ result.course.name }}</td>
+                                                        <td>{{ result.course.code }}</td>
+                                                        <td>{{ result.course.credit_load }}</td>
+                                                        <td>{{ result.ca }}</td>
+                                                        <td>{{ result.exams }}</td>
+                                                        <td>{{ result.total }}</td>
+                                                        <td>{{ result.grade }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <section style="margin-bottom: 5rem;">
+
+            </section>
+
+        {% endif %}
+
+    {% endblock body %}

@@ -1,0 +1,94 @@
+<form method="post">
+    {% csrf_token %}
+    <label for="session">session: </label>
+    <select name="session" id="session" required>
+        <option value="">--select--</option>
+        {% if session %}
+        {% for sessions in session %}
+        <option value="{{ sessions.session }}">{{ sessions.session }}</option>
+        {% endfor %}
+        {% endif %}
+    </select>
+
+    <label for="semester">semester: </label>
+    <select name="semester" id="semester" required>
+        <option value="">--select--</option>
+        <option value="1st">1st</option>
+        <option value="2nd">2nd</option>
+    </select>
+
+    <label for="course">course: </label>
+    <select name="course" id="course" required>
+        <option value="all">--All courses--</option>
+        {% if course %}
+        {% for course in course %}
+        <option value="{{ course.code }}">{{ course.name}} ({{ course.code }})</option>
+        {% endfor %}
+        {% endif %}
+    </select>
+    <button type="submit">Submit</button>
+</form>
+
+{% if result %}
+    {% if result == "no_result" %}
+        <h1>No result availble for {{ semester }} Semeter of {{ session }} Session</h1>
+    {% else %}
+        {% if course_code == "all" %}
+            <br><br><br>
+            <table>
+                <thead>
+                    <tr>S/N</tr>
+                    <tr>Course Title</tr>
+                    <tr>Course Code</tr>
+                    <tr>Credit Load</tr>
+                    <tr>CA</tr>
+                    <tr>Exams</tr>
+                    <tr>Total</tr>
+                    <tr>Grade</tr>
+                </thead>
+
+                <tbody>
+                    {% for result in result %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ result.course.name }}</td>
+                        <td>{{ result.course.code }}</td>
+                        <td>{{ result.course.credit_load }}</td>
+                        <td>{{ result.ca }}</td>
+                        <td>{{ result.exams }}</td>
+                        <td>{{ result.total }}</td>
+                        <td>{{ result.grade }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <br><br><br>
+            <table>
+                <thead>
+                    <tr>S/N</tr>
+                    <tr>Course Title</tr>
+                    <tr>Course Code</tr>
+                    <tr>Credit Load</tr>
+                    <tr>CA</tr>
+                    <tr>Exams</tr>
+                    <tr>Total</tr>
+                    <tr>Grade</tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>{{ result.course.name }}</td>
+                        <td>{{ result.course.code }}</td>
+                        <td>{{ result.course.credit_load }}</td>
+                        <td>{{ result.ca }}</td>
+                        <td>{{ result.exams }}</td>
+                        <td>{{ result.total }}</td>
+                        <td>{{ result.grade }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    {% endif %}
+{% endif %}

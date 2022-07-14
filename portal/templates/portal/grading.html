@@ -1,0 +1,250 @@
+{% extends "home/index.html" %}
+{% load static %}
+
+    {% block body %}
+    <!-- Start Hero Area -->
+    <section class="hero-section height-470" style="background-image:url({% static 'assets/images/about_us.png' %})">
+        <div class="hero-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="page-hrader text-white text-center">
+                            <h1 class="display-3">Grading</h1>
+                            <div class="page-breadcrumb">
+                                <p><a class="text-white" href="#">Home</a> - Grading</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero Area -->
+    <!--Start Page -->
+    <div class="page-wrapper section-ptb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto text-center">
+                    <div class="section-title">
+                        <h2>Grade a Course</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus est eum quia eos illum mollitia, delectus eveniet laboriosam molestias omnis neque.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 mx-auto section-pb border-bottom">
+                    <form method="post" class="search-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <select name="session" id="department" class="form-control" placeholder="Session" required>
+                                    <option value="">--select Session--</option>
+                                    {% if session %}
+                                    {% for sessions in session %}
+                                    <option value="{{ sessions.session }}">{{ sessions.session }}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <select name="semester" id="exam_year" class="form-control" placeholder="semester" required>
+                                    <option value="">--Select Semeter--</option>
+                                    <option value="1st">1st</option>
+                                    <option value="2nd">2nd</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <select name="course" id="exam_year" class="form-control" placeholder="course" required>
+                                    <option value="all">--All courses--</option>
+                                    {% if course %}
+                                    {% for course in course %}
+                                    <option value="{{ course.code }}">{{ course.name}} ({{ course.code }})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            {% if registered_course %}
+                            <div class="col-lg-12 text-center mx-auto">
+                                <button type="submit" class="button_one" disabled>View Result</button>
+                            </div>
+                            {% else %}
+                            <div class="col-lg-12 text-center mx-auto">
+                                <button type="submit" class="button_one">View Result</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% if registered_course %}
+        <div class="result-wrapper section-pt">
+            <div class="container">
+                <form action="{% url 'portal:add_grade' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-10 mx-auto text-center">
+                            <div class="results-area">
+                                <h2>Start Grading</h2>
+                                <p>{{ registered_course.course.name }} {{ registered_course.course.code }} - {{ registered_course.course.credit_load }}</p>
+                                <div class="result-table table-responsive mt-5 table-bordered">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>S/N</th>
+                                                <th>Registration  Number</th>
+                                                <th>CA</th>
+                                                <th>Exams</th>
+                                                <th>Total</th>
+                                                <th>Grade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for student in registered_course.student.all %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ student.reg_number }}</td>
+                                                <td><input type="number" class="form-control" placeholder="CA" name="{{ student.reg_number }}_ca" required></td>
+                                                <td><input type="number" class="form-control" placeholder="Exams" name="{{ student.reg_number }}_exams" required></td>
+                                                <td><input type="number" class="form-control" placeholder="Total" name="{{ student.reg_number }}_total" required></td>
+                                                <td>
+                                                    <select name="{{ student.reg_number }}_grade" id="user_class" class="form-control" required>
+                                                        <option value="1">--Select Grade--</option>
+                                                        <option value="A">A</option>
+                                                        <option value="B">B</option>
+                                                        <option value="C">C</option>
+                                                        <option value="D">D</option>
+                                                        <option value="E">E</option>
+                                                        <option value="F">F</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <input type="hidden" name="session" value="{{ session }}">
+                                            <input type="hidden" name="semester" value="{{ semester }}">
+                                            <input type="hidden" name="course_code" value="{{ course_code }}">
+                                            <input type="hidden" name="student" value="{{ student.reg_number }}">
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mx-auto text-center">
+                            <button type="submit" class="button_one mt-3">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock body %}
+
+
+
+
+
+
+
+
+
+
+<br><br><br>
+<table>
+    <thead>
+        <tr>S/N</tr>
+        <tr>Registration Number</tr>
+        <tr>CA</tr>
+        <tr>Exams</tr>
+        <tr>Total</tr>
+        <tr>Grade</tr>
+    </thead>
+
+    <tbody>
+        <form action="{% url 'portal:add_grade' %}" method="post">
+            {% csrf_token %}
+            {% if registered_course %}
+            {% for student in registered_course.student.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ student.reg_number }}</td>
+                <td><input type="number" name="{{ student.reg_number }}_ca" id="" required></td>
+                <td><input type="number" name="{{ student.reg_number }}_exams" id="" required></td>
+                <td><input type="number" name="{{ student.reg_number }}_total" id="" required></td>
+                <input type="hidden" name="session" value="{{ session }}">
+                <input type="hidden" name="semester" value="{{ semester }}">
+                <input type="hidden" name="course_code" value="{{ course_code }}">
+                <input type="hidden" name="student" value="{{ student.reg_number }}">
+                <td>
+                    <select name="{{ student.reg_number }}_grade" id="" required>
+                        <option value="">--select--</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+            <tr>
+                <button type="submit">Submit</button>
+            </tr>
+        </form>
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-4">
+        <select name="session" id="department" class="form-control" placeholder="Session" required>
+            <option value="">--select Session--</option>
+            {% if session %}
+            {% for sessions in session %}
+            <option value="{{ sessions.session }}">{{ sessions.session }}</option>
+            {% endfor %}
+            {% endif %}
+        </select>
+    </div>
+    <div class="col-lg-4">
+        <select name="semester" id="exam_year" class="form-control" placeholder="semester" required>
+            <option value="">--Select Semeter--</option>
+            <option value="1st">1st</option>
+            <option value="2nd">2nd</option>
+        </select>
+    </div>
+    <div class="col-lg-4">
+        <select name="course" id="exam_year" class="form-control" placeholder="course" required>
+            <option value="all">--All courses--</option>
+            {% if course %}
+            {% for course in course %}
+            <option value="{{ course.code }}">{{ course.name}} ({{ course.code }})</option>
+            {% endfor %}
+            {% endif %}
+        </select>
+    </div>
+    {% if result %}
+    <div class="col-lg-12 text-center mx-auto">
+        <button type="submit" class="button_one" disabled>View Result</button>
+    </div>
+    {% else %}
+    <div class="col-lg-12 text-center mx-auto">
+        <button type="submit" class="button_one">View Result</button>
+    </div>
+    {% endif %}
+</div>
