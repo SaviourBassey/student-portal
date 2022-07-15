@@ -83,6 +83,19 @@
         </div>
 
         {% if registered_course %}
+        {% if registered_course == "no_registration" %}
+        <div class="result-wrapper section-pt">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 mx-auto text-center">
+                        <div class="results-area">
+                            <h2>No Student has registered for {{ x_course }}, {{ semester }} Semeter of {{ session }} Session</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
         <div class="result-wrapper section-pt">
             <div class="container">
                 <form action="{% url 'portal:add_grade' %}" method="post">
@@ -143,6 +156,7 @@
                 </form>
             </div>
         </div>
+        {% endif %}
         {% endif %}
     </div>
 

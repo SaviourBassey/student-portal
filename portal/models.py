@@ -1,4 +1,5 @@
 from distutils.command.upload import upload
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -8,6 +9,10 @@ class Session(models.Model):
     session = models.CharField(max_length=9)
     updated = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = ("Session")
+        verbose_name_plural = ("Session")
 
     def __str__(self):
         return self.session
@@ -81,6 +86,26 @@ class Student(models.Model):
 
     def __str__(self):
         return self.reg_number
+
+DEPARTMENT_LEVEL_CHOICES = (
+    (100, 100),
+    (200, 200),
+    (300, 300),
+    (400, 400),
+    (500, 500)
+)
+class CourseAdviser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    staff_id = models.CharField(max_length=11, unique=True)
+    level = models.IntegerField(choices=DEPARTMENT_LEVEL_CHOICES)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.staff_id
+
 
 class RegisteredCourse(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)

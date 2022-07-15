@@ -72,18 +72,16 @@
                                 </button>
                                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{% url 'portal:student_dashboard' %}">Student Dashboard</a>
-                                        </li>
-                                        <!-- <li class="nav-item">
-                                            <a class="nav-link" href="about.html">Register Result</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="about.html">Result Checker</a>
-                                        </li> -->
+                                        {% if user.is_authenticated %}
+                                        {% if user.is_authenticated and request.user == request.user.courseadviser.user %}
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'portal:lecturer_dashboard' %}">Lecturer Dashboard</a>
                                         </li>
+                                        {% else %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'portal:student_dashboard' %}">Student Dashboard</a>
+                                        </li>
+                                        {% endif %}
                                         {% if user.is_authenticated %}
                                         <li class="nav-item">
                                             <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
@@ -124,6 +122,7 @@
                                         <li class="nav-item">
                                             <a href="#search_modal" data-toggle="modal" data-target="#search_modal" class="nav-link"><i class="fa fa-search"></i></a>
                                         </li> -->
+                                        {% endif %}
                                     </ul>
                                     <div class="collapse-bar">
                                         <a class="navbar-brand" data-toggle="collapse" href="#languages_options"><i class="fa fa-bars"></i></a>

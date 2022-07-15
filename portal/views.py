@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Department, Faculty, Session, Semester, Course, Student, RegisteredCourse, StudentGrade
+from .models import Department, Faculty, Session, Semester, Course, Student, RegisteredCourse, StudentGrade, CourseAdviser
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
@@ -165,9 +165,16 @@ class CheckResult(LoginRequiredMixin, View):
 
 class Grading(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
+        logged_in_user = User.objects.get(id=request.user.id)
         session = Session.objects.all().order_by("-timestamp")
         semester = Semester.objects.all().order_by("-timestamp")
-        course = Course.objects.all().order_by("name")
+        try:
+            course_adviser = CourseAdviser.objects.get(user=logged_in_user)
+            course_adviser_department = course_adviser.department
+            course_adviser_level = course_adviser.level
+            course = Course.objects.filter(department=course_adviser_department, level=course_adviser_level).order_by("name")
+        except:
+            course = []
         
         context = {
             "session":session,
@@ -185,13 +192,18 @@ class Grading(LoginRequiredMixin, View):
         #try
         x_semester = Semester.objects.get(semester=semester, session=x_session)
         x_course = Course.objects.get(code=course_code)
-        registered_course = RegisteredCourse.objects.get(session=x_session, semester=x_semester, course=x_course)
-
+        try:
+            registered_course = RegisteredCourse.objects.get(session=x_session, semester=x_semester, course=x_course)
+        except:
+            registered_course = "no_registration"
+        
+        print(registered_course)
         context = {
             "session":session,
             "semester":semester,
             "course_code":course_code,
-            "registered_course":registered_course
+            "registered_course":registered_course,
+            "x_course":x_course
         }
         return render(request, "portal/grading.html", context) 
 

@@ -15,11 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from portal.admin import portal_site
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("portal-admin/", portal_site.urls), #Link to the custom admin site
     path("accounts/", include("accounts.urls")),
     # path("", include("home.urls")),
     path("", include("portal.urls"))
 
 ]
+
+admin.site.index_title = "EUCRS ePortal"
+admin.site.site_header = "EUCRS Admin Portal"
+admin.site.site_title = "EUCRS Admin Portal"
