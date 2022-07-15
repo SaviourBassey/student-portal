@@ -246,7 +246,7 @@ class AddGrade(LoginRequiredMixin, View):
                         new.save()
                         print("here2")
                         # new.student.add(student)
-        return redirect("portal:student_dashboard")
+        return redirect("portal:lecturer_dashboard")
 
 
 class StudentDashboard(LoginRequiredMixin, View):
