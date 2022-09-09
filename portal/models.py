@@ -77,7 +77,7 @@ class Course(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    reg_number = models.CharField(max_length=16, unique=True)
+    reg_number = models.CharField(max_length=20, unique=True)
     level = models.IntegerField(default=100)
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -96,7 +96,7 @@ DEPARTMENT_LEVEL_CHOICES = (
 )
 class CourseAdviser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    staff_id = models.CharField(max_length=11, unique=True)
+    staff_id = models.CharField(max_length=20, unique=True)
     level = models.IntegerField(choices=DEPARTMENT_LEVEL_CHOICES)
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)

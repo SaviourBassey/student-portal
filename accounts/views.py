@@ -12,7 +12,8 @@ class LoginView(View):
     def post(self, request, *args, **kwargs):
         ID_number = str(request.POST.get('ID_number')).upper()
         password = request.POST.get('password')
-        if ID_number[:2] == "AK":
+        if ID_number[:3] != "EUA":
+            print("eu")
             try:
                 student = Student.objects.get(reg_number=ID_number)
             except:
@@ -28,6 +29,7 @@ class LoginView(View):
             else:
                     return redirect("accounts:login")
         else:
+            print("eua")
             try:
                 staff = CourseAdviser.objects.get(staff_id=ID_number)
                 print(staff)
